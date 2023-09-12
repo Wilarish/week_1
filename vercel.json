@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "name": "Simple_express_app_with_typescript_and_nodemon",
+  "builds": [
+    {
+      "src": "src/index.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "src/index.ts"
+    }
+  ]
+}
