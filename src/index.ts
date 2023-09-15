@@ -2,16 +2,23 @@ import express, {Request, Response} from 'express'
 import bodyParser from 'body-parser'
 
 
-const app = express()
-const port =process.env.PORT || 3003
-const products = [{id: 1, name: 'oranges'}, {id: 2, name:'tomato'}]
-const videos = [{id: 1, name: 'video: cool'}, {id: 2, name:'video: beast'}, {id: 3, name:'video: soap'}]
+export const app = express()
+const port = process.env.PORT || 3000
+let products = [
+    {id: 1, name: 'oranges'},
+    {id: 2, name:'tomato'}
+]
+let videos = [
+    {id: 1, name: 'video: cool'},
+    {id: 2, name:'video: beast'},
+    {id: 3, name:'video: soap'}
+]
 
 
 const parseMiddleWare = bodyParser({})
 app.use(parseMiddleWare)
 app.get('/', (req: Request, res: Response) => {
-    res.send('Helloh World!!!!!!')
+    res.send('Hellow World!')
 })
 
 
@@ -32,12 +39,12 @@ app.get('/videos', (req: Request, res: Response) => {
     res.send(videos)
 })
 app.post('/videos', (req: Request, res: Response) => {
-    const newProduct ={
+    const newVideo ={
         id: +(new Date()),
         name: req.body.name
     }
-    videos.push(newProduct)
-    res.status(201).send(newProduct)
+    videos.push(newVideo)
+    res.status(201).send(newVideo)
 })
 app.get('/videos/:id', (req: Request, res: Response) => {
     let video = videos.find(v => v.id === +req.params.id)
@@ -48,8 +55,12 @@ app.put('/videos/:id', (req: Request, res: Response) => {
     let video = videos.find(v => v.id === +req.params.id)
     if (video)
     {
-        video.name = req.body.name
-        res.status(200).send(video)
+        if(req.body.name !== ''){
+            video.name = req.body.name
+            res.status(200).send(video)
+        }
+        else res.send(400)
+
     }
     else{
         res.send (404)
@@ -64,6 +75,12 @@ app.delete('/videos/:id', (req: Request, res: Response) => {
         }
     }
     res.send(404)
+})
+
+app.delete('/__tests__/data',(req,res)=>{
+    videos = [];
+    res.send(videos)
+    res.sendStatus(200)
 })
 
 app.listen(port, () => {
